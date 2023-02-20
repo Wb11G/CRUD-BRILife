@@ -1,3 +1,5 @@
+exports.jwt_secret = "bri-life-example"
+
 exports.KnexConfig = {
     client: 'mysql2',
     connection: {
@@ -11,6 +13,7 @@ exports.KnexConfig = {
 }
 
 exports.tables = {
+    users: "users",
     barang: "barang",
     suplier: "suplier",
     barang_suplier: "barang_suplier",

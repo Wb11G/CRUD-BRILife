@@ -3,8 +3,9 @@ const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const knex = require('knex')
+const jwt = require('jsonwebtoken')
 
-const { KnexConfig, tables } = require('./config')
+const { KnexConfig, tables, jwt_secret } = require('./config')
 
 const app = express();
 
@@ -24,6 +25,14 @@ Database.raw("SELECT 1") // test connection...
         process.exit(1);
     });
 
+const createToken = (object, expiresIn = false) => {
+    const options = {};
+    if (!expiresIn) {
+        options.expiresIn = "5d";
+    }
+    return jwt.sign(object, jwt_secret, options);
+};
+
 // ============================================================
 
 // Middlewares
@@ -33,19 +42,70 @@ app.use(cors())
 app.use(helmet())
 app.use(morgan("dev"))
 
+/**
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @param {express.NextFunction} next 
+ * @returns 
+ */
+const token_validation = async (req, res, next) => {
+    const token = req.headers.authorization
+    const isBearer = String(token).startsWith("Bearer ")
+    if (token && isBearer) {
+        return jwt.verify(
+            String(token).split(" ")[1],
+            jwt_secret,
+            async (err, token_decoded) => {
+                if (err) {
+                    return res.status(401).json({
+                        message: "Not Authorized!",
+                    });
+                } else {
+                    req.user = token_decoded;
+                    return next();
+                }
+            }
+        );
+    } else {
+        return res.status(403).json({
+            message: "Authorization Bearer is required!",
+        });
+    }
+};
+
 // ============================================================
 
 // Auth Management
 app.post("/api/auth/v1/login", async (req, res) => {
+    const { user_id, password } = req.body
+    if (!(user_id && password)) {
+        return res.status(400).json({
+            message: "body is'n complete!"
+        })
+    }
+
+    const isLogin = await Database(tables.users)
+        .select("id")
+        .where("user_id", user_id)
+        .andWhere("password", password)
+        .first()
+    if (!isLogin) {
+        return res.status(400).json({
+            message: "user_id atau password salah!"
+        })
+    }
+
+    const token = createToken(isLogin)
+
     return res.status(200).json({
-        //
+        token
     })
 })
 
 // ============================================================
 
 // Barang Management
-app.post("/api/barang/v1/add", async (req, res) => {
+app.post("/api/barang/v1/add", token_validation, async (req, res) => {
     const { kd_brg, nama_brg, satuan, qty, harga, stok_min } = req.body;
     if (!(kd_brg && nama_brg && satuan && qty && harga && stok_min)) {
         return res.status(400).json({
@@ -69,14 +129,14 @@ app.post("/api/barang/v1/add", async (req, res) => {
     })
 })
 
-app.get("/api/barang/v1/list", async (req, res) => {
+app.get("/api/barang/v1/list", token_validation, async (req, res) => {
     const data = await Database(tables.barang).select("*")
     return res.status(200).json({
         data,
     })
 })
 
-app.get("/api/barang/v1/detail/:kd_brg", async (req, res) => {
+app.get("/api/barang/v1/detail/:kd_brg", token_validation, async (req, res) => {
     const find = await Database(tables.barang).select("*").where("kd_brg", req.params.kd_brg).first()
     if (!find) {
         return res.status(404).json({
@@ -86,7 +146,7 @@ app.get("/api/barang/v1/detail/:kd_brg", async (req, res) => {
     return res.status(200).json(find)
 })
 
-app.put("/api/barang/v1/edit/:kd_brg", async (req, res) => {
+app.put("/api/barang/v1/edit/:kd_brg", token_validation, async (req, res) => {
     const kd_brg = req.params.kd_brg
     const { nama_brg, satuan, qty, harga, stok_min } = req.body;
     if (!(nama_brg || satuan || qty || harga || stok_min)) {
@@ -111,7 +171,7 @@ app.put("/api/barang/v1/edit/:kd_brg", async (req, res) => {
     })
 })
 
-app.delete("/api/barang/v1/remove/:kd_brg", async (req, res) => {
+app.delete("/api/barang/v1/remove/:kd_brg", token_validation, async (req, res) => {
     const kd_brg = req.params.kd_brg
 
     const isKdBrgExist = await Database(tables.barang).select("id").where("kd_brg", kd_brg).first()
@@ -140,7 +200,7 @@ app.delete("/api/barang/v1/remove/:kd_brg", async (req, res) => {
 // ============================================================
 
 // Supplier Management
-app.post("/api/supplier/v1/add", async (req, res) => {
+app.post("/api/supplier/v1/add", token_validation, async (req, res) => {
     const { kd_sup, nama_sup, alamat, kota, telp, email, pic } = req.body;
     if (!(kd_sup && nama_sup && alamat && kota && telp && email && pic)) {
         return res.status(400).json({
@@ -164,14 +224,14 @@ app.post("/api/supplier/v1/add", async (req, res) => {
     })
 })
 
-app.get("/api/supplier/v1/list", async (req, res) => {
+app.get("/api/supplier/v1/list", token_validation, async (req, res) => {
     const data = await Database(tables.suplier).select("*")
     return res.status(200).json({
         data,
     })
 })
 
-app.get("/api/supplier/v1/detail/:kd_sup", async (req, res) => {
+app.get("/api/supplier/v1/detail/:kd_sup", token_validation, async (req, res) => {
     const find = await Database(tables.suplier).select("*").where("kd_sup", req.params.kd_sup).first()
     if (!find) {
         return res.status(404).json({
@@ -181,7 +241,7 @@ app.get("/api/supplier/v1/detail/:kd_sup", async (req, res) => {
     return res.status(200).json(find)
 })
 
-app.put("/api/supplier/v1/edit/:kd_sup", async (req, res) => {
+app.put("/api/supplier/v1/edit/:kd_sup", token_validation, async (req, res) => {
     const kd_sup = req.params.kd_sup
     const { nama_sup, alamat, kota, telp, email, pic } = req.body;
     if (!(nama_sup || alamat || kota || telp || email || pic)) {
@@ -206,7 +266,7 @@ app.put("/api/supplier/v1/edit/:kd_sup", async (req, res) => {
     })
 })
 
-app.delete("/api/supplier/v1/remove/:kd_sup", async (req, res) => {
+app.delete("/api/supplier/v1/remove/:kd_sup", token_validation, async (req, res) => {
     const kd_sup = req.params.kd_sup
 
     const isKdBrgExist = await Database(tables.suplier).select("id").where("kd_sup", kd_sup).first()
@@ -232,7 +292,7 @@ app.delete("/api/supplier/v1/remove/:kd_sup", async (req, res) => {
 // ============================================================
 
 // Barang Supplier Management
-app.post("/api/barang-supplier/v1/add", async (req, res) => {
+app.post("/api/barang-supplier/v1/add", token_validation, async (req, res) => {
     const { kd_brg, kd_sup, harga, discount_percentage } = req.body
     if (!(kd_brg && kd_sup && harga && discount_percentage)) {
         return res.status(400).json({
@@ -276,7 +336,7 @@ app.post("/api/barang-supplier/v1/add", async (req, res) => {
     })
 })
 
-app.get("/api/barang-supplier/v1/list", async (req, res) => {
+app.get("/api/barang-supplier/v1/list", token_validation, async (req, res) => {
     const data = await Database(tables.barang_suplier).select("*")
     return res.status(200).json({
         data,
@@ -286,7 +346,7 @@ app.get("/api/barang-supplier/v1/list", async (req, res) => {
 // ============================================================
 
 // PO Management
-app.post("/api/po/v1/add", async (req, res) => {
+app.post("/api/po/v1/add", token_validation, async (req, res) => {
     const { kt_trans, tgl_trans, kd_sup, userid, total_item, total_harga, discount } = req.body
     if (!(kt_trans && tgl_trans && kd_sup && userid && total_item && total_harga && discount)) {
         return res.status(400).json({
@@ -319,7 +379,7 @@ app.post("/api/po/v1/add", async (req, res) => {
     })
 })
 
-app.get("/api/po/v1/list", async (req, res) => {
+app.get("/api/po/v1/list", token_validation, async (req, res) => {
     const data = await Database(tables.po).select("*")
     return res.status(200).json({
         data,
@@ -329,7 +389,7 @@ app.get("/api/po/v1/list", async (req, res) => {
 // ============================================================
 
 // PO Detail Management
-app.post("/api/po-detail/v1/add", async (req, res) => {
+app.post("/api/po-detail/v1/add", token_validation, async (req, res) => {
     const { kt_trans, kd_brg, qty, harga, discount_percentage, total_discount } = req.body
     if (!(kt_trans && kd_brg && qty && harga && discount_percentage && total_discount)) {
         return res.status(400).json({
@@ -376,7 +436,7 @@ app.post("/api/po-detail/v1/add", async (req, res) => {
     })
 })
 
-app.get("/api/po-detail/v1/list", async (req, res) => {
+app.get("/api/po-detail/v1/list", token_validation, async (req, res) => {
     const data = await Database(tables.po_detail).select("*")
     return res.status(200).json({
         data,
