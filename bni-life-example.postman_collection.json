@@ -1,0 +1,497 @@
+{
+	"info": {
+		"_postman_id": "f9e7aaae-4305-47fe-99d7-80aa40b393e5",
+		"name": "bni-life-example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15622321"
+	},
+	"item": [
+		{
+			"name": "barang",
+			"item": [
+				{
+					"name": "barang : add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kd_brg\":\"OK123\",\n    \"nama_brg\":\"Nantangin JRG\",\n    \"satuan\":\"PCS\",\n    \"qty\": 123,\n    \"harga\": 120000,\n    \"stok_min\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/barang/v1/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang",
+								"v1",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "barang : list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjc2ODgwMjIyLCJleHAiOjE2NzczMTIyMjJ9.p0lkF8XW8z2QSOFQcq_lxhfi1fFOkrh0iPDPO2TNkNs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/barang/v1/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang",
+								"v1",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "barang : detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/barang/v1/detail/OK123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang",
+								"v1",
+								"detail",
+								"OK123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "barang : update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_brg\":\"Nantangin Elu\",\n    \"satuan\":\"BOX\",\n    \"qty\": 13\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/barang/v1/edit/OK123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang",
+								"v1",
+								"edit",
+								"OK123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "barang : delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/barang/v1/remove/OK123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang",
+								"v1",
+								"remove",
+								"OK123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "supplier",
+			"item": [
+				{
+					"name": "supplier : add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kd_sup\":\"SIP13\",\n    \"nama_sup\":\"Azek Anjay\",\n    \"alamat\":\"di alam sana\",\n    \"kota\":\"akhirat\",\n    \"telp\":\"080022132423\",\n    \"email\":\"azek.ajah@ngimel.com\",\n    \"pic\":\"paijo ajah\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/supplier/v1/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"supplier",
+								"v1",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier : list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/supplier/v1/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"supplier",
+								"v1",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier : detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/supplier/v1/detail/SIP13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"supplier",
+								"v1",
+								"detail",
+								"SIP13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier : update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_sup\":\"Azek Anjay Ajah\",\n    \"kota\":\"akhirat neraka\",\n    \"telp\":\"08123456789\",\n    \"pic\":\"paijo ajah ya guys\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/supplier/v1/edit/SIP13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"supplier",
+								"v1",
+								"edit",
+								"SIP13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier : delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/supplier/v1/remove/SIP13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"supplier",
+								"v1",
+								"remove",
+								"SIP13"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "barang supplier",
+			"item": [
+				{
+					"name": "barang supplier : add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kd_brg\":\"OK123\",\n    \"kd_sup\":\"SIP13\",\n    \"harga\":13000,\n    \"discount_percentage\":80\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/barang-supplier/v1/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang-supplier",
+								"v1",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "barang supplier : list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/barang-supplier/v1/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"barang-supplier",
+								"v1",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "po",
+			"item": [
+				{
+					"name": "po : add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kt_trans\":\"TRX12\",\n    \"tgl_trans\": \"2023-02-20T06:22:24.417Z\",\n    \"kd_sup\":\"SIP13\",\n    \"userid\":\"user01\",\n    \"total_item\":123,\n    \"total_harga\":666000,\n    \"discount\":45000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/po/v1/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"po",
+								"v1",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "po : list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/po/v1/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"po",
+								"v1",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "po detail",
+			"item": [
+				{
+					"name": "po detail : add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kt_trans\":\"TRX12\",\n    \"kd_brg\":\"OK123\",\n    \"qty\":123,\n    \"harga\":666000,\n    \"discount_percentage\":12,\n    \"total_discount\":333000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/po-detail/v1/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"po-detail",
+								"v1",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "po detail : list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/po-detail/v1/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"po-detail",
+								"v1",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\":\"BRILife\",\n    \"password\":\"2digit\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
