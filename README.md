@@ -1,3 +1,3 @@
 # Cara Run Code 
-### Yarn install
-### Yarn Frist Init
+### yarn install
+### yarn first:init
